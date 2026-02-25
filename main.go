@@ -5,10 +5,14 @@ import (
 	"go-bot/app"
 	"go-bot/config"
 	"log/slog"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
+
+func init() { rand.Seed(time.Now().UnixNano()) }
 
 func main() {
 	cfg := config.New("config.json")

@@ -73,9 +73,11 @@ func (a *App) sendToChat(chatID int64) {
 			ParseMode: "HTML",
 		})
 	} else {
+		msg := parseSpintax(a.config.Message)
+
 		msgID, err = a.sendMessage(sendMessageRequest{
 			ChatID:    chatID,
-			Text:      a.config.Message,
+			Text:      msg,
 			ParseMode: "HTML",
 		})
 	}

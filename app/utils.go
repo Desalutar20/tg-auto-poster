@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"html"
+	"math/rand"
 	"strings"
 	"unicode/utf16"
 )
@@ -103,4 +104,31 @@ func UnparseEntitiesToHTML(text string, entities []messageEntity) string {
 	}
 
 	return result.String()
+}
+
+func parseSpintax(input string) string {
+	for {
+		start := strings.LastIndex(input, "{")
+		if start == -1 {
+			break
+		}
+
+		end := strings.Index(input[start:], "}")
+		if end == -1 {
+			break
+		}
+
+		end += start
+
+		block := input[start+1 : end]
+		options := strings.Split(block, "|")
+		if len(options) == 0 {
+			break
+		}
+
+		choice := options[rand.Intn(len(options))]
+		input = input[:start] + choice + input[end+1:]
+	}
+
+	return input
 }
