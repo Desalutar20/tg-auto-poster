@@ -1,8 +1,8 @@
 {
-	"adminId": 111,
-	"postMinute": 5,
-	"pin": true,
-	"removeLast": true,
+	"adminId": 1,
+	"postMinute": 15,
+	"pin": false,
+	"removeLast": false,
 	"chatIds": [],
-	"message": "message"
+	"message": "test"
 }

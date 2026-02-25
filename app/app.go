@@ -76,10 +76,12 @@ func (a *App) handleCallback(cb *callbackQuery, ctx context.Context) {
 	}
 
 	callbackType := Callback(cb.Data)
+	callPanel := false
 
 	switch callbackType {
 	case START_CALLBACK_DATA:
 		answer.ShowAlert = true
+		callPanel = true
 
 		if a.schedulerCtx != nil {
 			a.logger.Info("Scheduler already running")
@@ -98,6 +100,7 @@ func (a *App) handleCallback(cb *callbackQuery, ctx context.Context) {
 	case STOP_CALLBACK_DATA:
 		{
 			answer.ShowAlert = true
+			callPanel = true
 
 			if a.schedulerCtxCancelFunc != nil {
 				a.logger.Info("Stopping scheduler")
@@ -178,6 +181,8 @@ func (a *App) handleCallback(cb *callbackQuery, ctx context.Context) {
 			} else {
 				answer.Text = "📍 Сообщения больше не будут закрепляться"
 			}
+
+			callPanel = true
 		}
 
 	case REMOVE_LAST_DATA:
@@ -195,12 +200,18 @@ func (a *App) handleCallback(cb *callbackQuery, ctx context.Context) {
 			} else {
 				answer.Text = "✅ Сообщения больше не будут удаляться автоматически"
 			}
+
+			callPanel = true
 		}
 
 	}
 
 	a.callbackType = callbackType
 	a.answerCallback(answer)
+
+	if callPanel {
+		a.сontrolPanel(cb.Message.Chat.ID)
+	}
 }
 
 func (a *App) handleMessage(msg *message, ctx context.Context) {
@@ -223,6 +234,8 @@ func (a *App) handleMessage(msg *message, ctx context.Context) {
 			}); sendErr != nil {
 				a.logger.Warn(sendErr.Error())
 			}
+
+			a.сontrolPanel(msg.Chat.ID)
 			return
 		}
 
@@ -239,6 +252,8 @@ func (a *App) handleMessage(msg *message, ctx context.Context) {
 		}
 
 		a.callbackType = NONE_DATA
+		a.сontrolPanel(msg.Chat.ID)
+
 		return
 	}
 
@@ -275,6 +290,8 @@ func (a *App) handleMessage(msg *message, ctx context.Context) {
 		}
 
 		a.callbackType = NONE_DATA
+		a.сontrolPanel(msg.Chat.ID)
+
 		return
 	}
 
@@ -311,6 +328,8 @@ func (a *App) handleMessage(msg *message, ctx context.Context) {
 		}
 
 		a.callbackType = NONE_DATA
+		a.сontrolPanel(msg.Chat.ID)
+
 		return
 	}
 
@@ -365,6 +384,8 @@ func (a *App) handleMessage(msg *message, ctx context.Context) {
 		}
 
 		a.callbackType = NONE_DATA
+		a.сontrolPanel(msg.Chat.ID)
+
 		return
 	}
 
